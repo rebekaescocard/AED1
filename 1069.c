@@ -6,7 +6,7 @@ int main() {
     int diamante_aberto = 0;   
     int diamante_cont = 0;  
     
-    printf("Digite a linha com areia e diamantes (ex: <<.<<..>><>><.>):\n");
+    printf("Digite a linha com areia e diamantes:\n");
     if (scanf("%s", linha) != 1) {
         printf("Erro na leitura da entrada.\n");
         return 1;
@@ -30,4 +30,5 @@ int main() {
     printf("Total de diamantes capturados: %d\n", diamante_cont);
     
     return 0;
+
 }
