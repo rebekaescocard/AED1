@@ -5,10 +5,9 @@ int main() {
     double valor;
     scanf("%lf", &valor);
 
-    // Converte para centavos para evitar erros de ponto flutuante
     int centavos = (int) round(valor * 100);
 
-    int notas[] = {10000, 5000, 2000, 1000, 500, 200}; // em centavos
+    int notas[] = {10000, 5000, 2000, 1000, 500, 200}; 
     int moedas[] = {100, 50, 25, 10, 5, 1};
 
     printf("NOTAS:\n");
@@ -26,4 +25,5 @@ int main() {
     }
 
     return 0;
+
 }
