@@ -1,19 +1,21 @@
 #include <stdio.h>
+#include <stdio.h>
 
-unsigned long long fatorial(int x) {
-    unsigned long long fat = 1;
-    for (int i = 2; i <= x; i++)
-        fat *= i;
-    return fat;
-}
+int main(){
+  unsigned short primeiro_numero, segundo_numero;
+  unsigned i;
+  long double resultado = 1, resultado2 = 1;
 
-int main() {
-    int m, n;
-
-    while (scanf("%d %d", &m, &n) != EOF) {
-        unsigned long long resultado = fatorial(m) + fatorial(n);
-        printf("%llu\n", resultado);
+  while (scanf("%hd %hd", &primeiro_numero, &segundo_numero) != EOF){
+    for (i = primeiro_numero; i > 0; i--){
+      resultado* = i;
     }
-
-    return 0;
+    for (i = segundo_numero; i > 0; i--){
+      resultado2* = i;
+    }
+    
+    printf("%.0Lf\n", resultado + resultado2);
+    resultado = 1;
+    resultado2 = 1;
+  }
 }
