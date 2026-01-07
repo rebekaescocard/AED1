@@ -1,54 +1,63 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct {
+typedef struct{
     int u, v, w;
-} Edge;
+}vertice;
 
-int parent[200000];
+int pai[200000];
 
-int find(int x) {
-    if (parent[x] == x) return x;
-    return parent[x] = find(parent[x]);
+int encontrar(int x){
+    if (pai[x] == x){ 
+        return x;
+    }
+    return pai[x] = encontrar(pai[x]);
 }
 
-void unite(int a, int b) {
-    a = find(a);
-    b = find(b);
-    if (a != b) parent[b] = a;
+void unir(int a, int b){
+    a = encontrar(a);
+    b = encontrar(b);
+    if (a != b){ 
+        pai[b] = a;
+    }
 }
 
-int cmp(const void *a, const void *b) {
-    return ((Edge*)a)->w - ((Edge*)b)->w;
+int cmp(const void *a, const void *b){
+    return ((vertice*)a)->w - ((vertice*)b)->w;
 }
 
-int main() {
+int main(){
     int m, n;
-    while (1) {
+    while (1){
         scanf("%d %d", &m, &n);
-        if (m == 0 && n == 0) break;
-
-        Edge edges[n];
-        int total = 0;
-
-        for (int i = 0; i < n; i++) {
-            scanf("%d %d %d", &edges[i].u, &edges[i].v, &edges[i].w);
-            total += edges[i].w;
+        if (m == 0 && n == 0){ 
+            break;
         }
 
-        for (int i = 0; i < m; i++) parent[i] = i;
+        vertice vertices[n];
+        int total = 0;
 
-        qsort(edges, n, sizeof(Edge), cmp);
+        for (int i = 0; i < n; i++){
+            scanf("%d %d %d", &vertices[i].u, &vertices[i].v, &vertices[i].w);
+            total += vertices[i].w;
+        }
 
-        int mst = 0;
-        for (int i = 0; i < n; i++) {
-            if (find(edges[i].u) != find(edges[i].v)) {
-                unite(edges[i].u, edges[i].v);
-                mst += edges[i].w;
+        for (int i = 0; i < m; i++){
+            pai[i] = i;
+        }
+
+        qsort(vertices, n, sizeof(vertice), cmp);
+
+        int quantidade = 0;
+        for (int i = 0; i < n; i++){
+            if (encontrar(vertices[i].u) != encontrar(vertices[i].v)){
+                unir(vertices[i].u, vertices[i].v);
+                quantidade += vertices[i].w;
             }
         }
 
-        printf("%d\n", total - mst);
+        printf("%d\n", total - quantidade);
     }
     return 0;
+
 }
