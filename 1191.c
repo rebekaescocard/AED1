@@ -1,31 +1,31 @@
 #include <stdio.h>
 #include <string.h>
 
-void buildPostOrder(char *pre, char *in, int n) {
-    if (n <= 0) return;
+void pos_ordem(char *pre, char *in, int n){
+    if (n <= 0){ 
+        return;
+    }
 
-    char root = pre[0];
+    char raiz = pre[0];
 
     int pos;
-    for (pos = 0; pos < n; pos++) {
-        if (in[pos] == root) break;
+    for (pos = 0; pos < n; pos++){
+        if (in[pos] == raiz){ 
+            break;
+        }
     }
-
-    buildPostOrder(pre + 1, in, pos);
-
-    buildPostOrder(pre + pos + 1, in + pos + 1, n - pos - 1);
-
-    printf("%c", root);
+    pos_ordem(pre + 1, in, pos);
+    pos_ordem(pre + pos + 1, in + pos + 1, n - pos - 1);
+    printf("%c", raiz);
 }
 
-int main() {
+int main(){
     char pre[50], in[50];
 
-    while (scanf("%s %s", pre, in) != EOF) {
+    while (scanf("%s %s", pre, in) != EOF){
         int n = strlen(pre);
-        buildPostOrder(pre, in, n);
+        pos_ordem(pre, in, n);
         printf("\n");
     }
-
     return 0;
 }
