@@ -1,70 +1,85 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct Node {
-    int val;
-    struct Node *left, *right;
-} Node;
+typedef struct no{
+    int dados;
+    struct no *esq;
+    struct no *dir;
+}no;
 
-Node* newNode(int val) {
-    Node* node = (Node*)malloc(sizeof(Node));
-    node->val = val;
-    node->left = node->right = NULL;
-    return node;
+no* novo_no(int dados){
+    no* no = (no*)malloc(sizeof(no));
+    no->dados = dados;
+    no->esq = no->dir = NULL;
+    return no;
 }
 
-Node* insert(Node* root, int val) {
-    if (root == NULL) return newNode(val);
-    if (val < root->val)
-        root->left = insert(root->left, val);
-    else
-        root->right = insert(root->right, val);
-    return root;
+no* inserir(no* raiz, int dados){
+    if (raiz == NULL){ 
+        return novo_no(dados);
+    }
+    if (dados < raiz->dados){
+        raiz->esq = inserir(raiz->esq, dados);
+    }
+    else{
+        raiz->dir = inserir(raiz->dir, dados);
+    }
+    return raiz;
 }
 
-void levelOrder(Node* root) {
-    if (!root) return;
-    Node* queue[10000];
-    int front = 0, rear = 0;
-    queue[rear++] = root;
+void ordem_nivel(no* raiz){
+    if (!raiz){ 
+        return;
+    }
+    no* enfilera[10000];
+    int frente = 0; 
+    int fim = 0;
+    enfilera[fim++] = raiz;
 
-    int first = 1;
-    while (front < rear) {
-        Node* cur = queue[front++];
-        if (first) {
-            printf("%d", cur->val);
-            first = 0;
-        } else {
-            printf(" %d", cur->val);
+    int primeiro = 1;
+    while (frente < fim){
+        no* atual = enfilera[frente++];
+        if (primeiro){
+            printf("%d", atual->dados);
+            primeiro = 0;
+        } 
+        else{
+            printf(" %d", atual->dados);
         }
-        if (cur->left) queue[rear++] = cur->left;
-        if (cur->right) queue[rear++] = cur->right;
+        if (atual->esq){ 
+            enfilera[fim++] = atual->esq;
+        }
+        if (atual->dir){ 
+            enfilera[fim++] = atual->dir;
+        }
     }
     printf("\n");
 }
 
 
-void freeTree(Node* root) {
-    if (!root) return;
-    freeTree(root->left);
-    freeTree(root->right);
-    free(root);
+void libera_arvore(no* raiz){
+    if (!raiz){ 
+        return;
+    }
+    libera_arvore(raiz->esq);
+    libera_arvore(raiz->dir);
+    free(raiz);
 }
 
-int main() {
-    int t, n, val;
+int main(){
+    int t, n, dados;
     scanf("%d", &t); 
-    for (int c = 1; c <= t; c++) {
+    for (int c = 1; c <= t; c++){
         scanf("%d", &n); 
-        Node* root = NULL;
-        for (int i = 0; i < n; i++) {
-            scanf("%d", &val);
-            root = insert(root, val);
+        no* raiz = NULL;
+        for (int i = 0; i < n; i++){
+            scanf("%d", &dados);
+            raiz = inserir(raiz, dados);
         }
-        printf("Case %d:\n", c);
-        levelOrder(root);
+        printf("caso %d:\n", c);
+        ordem_nivel(raiz);
         printf("\n");
-        freeTree(root);
+        libera_arvore(raiz);
     }
     return 0;
 }
