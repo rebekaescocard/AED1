@@ -3,90 +3,94 @@
 #include <limits.h>
 #include <stdbool.h>
 
-#define MAXN 250
-#define INF INT_MAX/2
-
-typedef struct Edge {
+typedef struct vertice{
     int v;
     int w;
-    struct Edge *next;
-} Edge;
+    struct vertice *proximo;
+}vertice;
 
-Edge* adj[MAXN];
+vertice* mat[250];
 int N, M, C, K;
 
-void add_edge(int u, int v, int w) {
-    Edge* e = malloc(sizeof(Edge));
+void adiciona_vertice(int u, int v, int w){
+    vertice* e = malloc(sizeof(vertice));
     e->v = v; e->w = w;
-    e->next = adj[u];
-    adj[u] = e;
-    e = malloc(sizeof(Edge));
+    e->proximo = mat[u];
+    mat[u] = e;
+    e = malloc(sizeof(vertice));
     e->v = u; e->w = w;
-    e->next = adj[v];
-    adj[v] = e;
+    e->proximo = mat[v];
+    mat[v] = e;
 }
 
-int dijkstra() {
-    int dist[MAXN];
-    bool vis[MAXN] = {0};
+int dijkstra(){
+    int distancia[250];
+    bool visitado[250] = {0};
 
-    for (int i = 0; i < N; i++) dist[i] = INF;
-    dist[K] = 0;
+    for (int i = 0; i < N; i++){
+        distancia[i] = INF;
+    }
+    distancia[K] = 0;
 
-    for (;;) {
-        int u = -1, best = INF;
-        for (int i = 0; i < N; i++) {
-            if (!vis[i] && dist[i] < best) {
-                best = dist[i];
-                u = i;
-            }
+    while (1){
+    int u = -1;
+    if (u == -1){ 
+        break; 
+    }
+        if (u == -1){ 
+            break;
         }
-        if (u == -1) break;
-        vis[u] = true;
+        visitado[u] = true;
 
-        if (u >= 0 && u < C-1) {
+        if (u >= 0 && u < C-1){
             int v = u+1;
-            for (Edge* e = adj[u]; e != NULL; e = e->next) {
-                if (e->v == v) {
-                    if (dist[v] > dist[u] + e->w) {
-                        dist[v] = dist[u] + e->w;
+            for (vertice* e = mat[u]; e != NULL; e = e->proximo){
+                if (e->v == v){
+                    if (distancia[v] > distancia[u] + e->w){
+                        distancia[v] = distancia[u] + e->w;
                     }
                     break;
                 }
             }
         }
 
-        if (!(u >= 0 && u < C)) {
-            for (Edge* e = adj[u]; e != NULL; e = e->next) {
+        if (!(u >= 0 && u < C)){
+            for (vertice* e = mat[u]; e != NULL; e = e->proximo){
                 int v = e->v;
                 int w = e->w;
-                if (dist[v] > dist[u] + w) {
-                    dist[v] = dist[u] + w;
+                if (distancia[v] > distancia[u] + w){
+                    distancia[v] = distancia[u] + w;
                 }
             }
         }
     }
 
-    return dist[C-1] >= INF ? -1 : dist[C-1];
+    return distancia[C-1] >= INF ? -1 : distancia[C-1];
 }
 
 int main(){
-    while (scanf("%d %d %d %d", &N, &M, &C, &K)==4) {
-        if (N==0 && M==0 && C==0 && K==0) break;
-
-        for (int i = 0; i < N; i++) {
-            adj[i] = NULL;
+    while (scanf("%d %d %d %d", &N, &M, &C, &K)==4){
+        if (N==0 && M==0 && C==0 && K==0){ 
+            break;
         }
 
-        for (int i = 0; i < M; i++) {
+        for (int i = 0; i < N; i++){
+            mat[i] = NULL;
+        }
+
+        for (int i = 0; i < M; i++){
             int u, v, w;
             scanf("%d %d %d", &u, &v, &w);
-            add_edge(u, v, w);
+            adiciona_vertice(u, v, w);
         }
 
-        int ans = dijkstra();
-        if (ans < 0) printf("Impossible\n");
-        else printf("%d\n", ans);
+        int resposta = dijkstra();
+        if (resposta < 0){ 
+            printf("Impossible\n");
+        }
+        else{ 
+            printf("%d\n", resposta);
+        }
     }
     return 0;
 }
