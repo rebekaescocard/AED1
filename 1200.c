@@ -2,89 +2,114 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef struct No {
-    char data;
-    struct No *esq, *dir;
-} No;
+typedef struct no{
+    char dados;
+    struct No *esq;
+    struct no *dir;
+}no;
 
-No* novoNo(char data) {
-    No* no = (No*) malloc(sizeof(No));
-    no->data = data;
+no* novo_no(char dados){
+    no* no = (no*) malloc(sizeof(no));
+    no->dados = dados;
     no->esq = no->dir = NULL;
     return no;
 }
 
-No* insert(No* root, char data) {
-    if (root == NULL) return novoNo(data);
-    if (data < root->data)
-        root->esq = insert(root->esq, data);
-    else if (data > root->data)
-        root->dir = insert(root->dir, data);
-    return root;
+no* inserir(no* raiz, char dados){
+    if (raiz == NULL){ 
+        return novo_no(dados);
+    }
+    if (dados < raiz->dados){
+        raiz->esq = inserir(raiz->esq, dados);
+    }
+    if (dados > raiz->dados){
+        raiz->dir = inserir(raiz->dir, dados);
+    }
+    return raiz;
 }
 
-int search(No* root, char data) {
-    if (root == NULL) return 0;
-    if (root->data == data) return 1;
-    if (data < root->data) return search(root->esq, data);
-    else return search(root->dir, data);
-}
-
-void inorder(No* root, int *first) {
-    if (root != NULL) {
-        inorder(root->esq, first);
-        if (!*first) printf(" ");
-        printf("%c", root->data);
-        *first = 0;
-        inorder(root->dir, first);
+int busca(no* raiz, char dados){
+    if (raiz == NULL){ 
+        return 0;
+    }
+    if (raiz->dados == dados){ 
+        return 1;
+    }
+    if (dados < raiz->dados){ 
+        return busca(raiz->esq, dados);
+    }
+    else{
+        return busca(raiz->dir, dados);
     }
 }
 
-void preorder(No* root, int *first) {
-    if (root != NULL) {
-        if (!*first) printf(" ");
-        printf("%c", root->data);
-        *first = 0;
-        preorder(root->esq, first);
-        preorder(root->dir, first);
+void infixa(no* raiz, int *primeiro){
+    if (raiz != NULL){
+        infixa(raiz->esq, primeiro);
+        if (!*primeiro){ 
+            printf(" ");
+        }
+        printf("%c", raiz->dados);
+        *primeiro = 0;
+        infixa(raiz->dir, primeiro);
     }
 }
 
-void postorder(No* root, int *first) {
-    if (root != NULL) {
-        postorder(root->esq, first);
-        postorder(root->dir, first);
-        if (!*first) printf(" ");
-        printf("%c", root->data);
-        *first = 0;
+void prefixa(no* raiz, int *primeiro){
+    if (raiz != NULL){
+        if (!*primeiro){ 
+            printf(" ");
+        }
+        printf("%c", raiz->dados);
+        *primeiro = 0;
+        prefixa(raiz->esq, primeiro);
+        prefixa(raiz->dir, primeiro);
     }
 }
 
-int main() {
-    No* root = NULL;
-    char command[20], c;
+void posfixa(no* raiz, int *primeiro){
+    if (raiz != NULL){
+        posfixa(raiz->esq, primeiro);
+        posfixa(raiz->dir, primeiro);
+        if (!*primeiro){ 
+            printf(" ");
+        }
+        printf("%c", raiz->dados);
+        *primeiro = 0;
+    }
+}
 
-    while (scanf("%s", command) != EOF) {
-        if (strcmp(command, "I") == 0) {
+int main(){
+    no* raiz = NULL;
+    char ordem[20], c;
+
+    while (scanf("%s", ordem) != EOF){
+        if (strcmp(ordem, "I") == 0){
             scanf(" %c", &c);
-            root = insert(root, c);
-        } else if (strcmp(command, "P") == 0) {
+            raiz = inserir(raiz, c);
+        } 
+        if (strcmp(ordem, "P") == 0){
             scanf(" %c", &c);
-            if (search(root, c))
+            if (busca(raiz, c)){
                 printf("%c existe\n", c);
-            else
+            }
+            else{
                 printf("%c nao existe\n", c);
-        } else if (strcmp(command, "INFIXA") == 0) {
-            int first = 1;
-            inorder(root, &first);
+            }
+        } 
+        if (strcmp(ordem, "INFIXA") == 0) {
+            int primeiro = 1;
+            infixa(raiz, &primeiro);
             printf("\n");
-        } else if (strcmp(command, "PREFIXA") == 0) {
-            int first = 1;
-            preorder(root, &first);
+        } 
+        if (strcmp(ordem, "PREFIXA") == 0) {
+            int primeiro = 1;
+            prefixa(raiz, &primeiro);
             printf("\n");
-        } else if (strcmp(command, "POSFIXA") == 0) {
-            int first = 1;
-            postorder(root, &first);
+        } 
+        if (strcmp(ordem, "POSFIXA") == 0) {
+            int primeiro = 1;
+            posfixa(raiz, &primeiro);
             printf("\n");
         }
     }
