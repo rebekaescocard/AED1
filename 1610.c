@@ -1,55 +1,61 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct No {
+typedef struct no{
     int vizinho;
-    struct No *proximo;
-} No;
+    struct no *proximo;
+}no;
 
-typedef struct Graph {
-    int numVertices;
-    No **adjList;
-} Graph;
+typedef struct grafo{
+    int numero_vertices;
+    no **lista_adj;
+}grafo;
 
-No *criaNovoNo(int v) {
-    No *novoNo = (No *)malloc(sizeof(No));
-    if (novoNo == NULL) exit(1);
-    novoNo->vizinho = v;
-    novoNo->proximo = NULL;
-    return novoNo;
+no *criar_no(int v){
+    no *novo_no = (no *)malloc(sizeof(no));
+    if (novo_no == NULL){ 
+        exit(1);
+    }
+    novo_no->vizinho = v;
+    novo_no->proximo = NULL;
+    return novo_no;
 }
 
-Graph *criaGrafo(int V) {
-    Graph *grafo = (Graph *)malloc(sizeof(Graph));
-    if (grafo == NULL) exit(1);
-    grafo->numVertices = V;
+grafo *criar_grafo(int V){
+    grafo *grafo = (grafo *)malloc(sizeof(grafo));
+    if (grafo == NULL){ 
+        exit(1);
+    }
+    grafo->numero_vertices = V;
 
-    grafo->adjList = (No **)malloc((V + 1) * sizeof(No *)); 
-    if (grafo->adjList == NULL) exit(1);
+    grafo->lista_adj = (no **)malloc((V + 1) * sizeof(no *)); 
+    if (grafo->adjList == NULL){
+        exit(1);
+    }
 
-    for (int i = 1; i <= V; i++) {
-        grafo->adjList[i] = NULL;
+    for (int i = 1; i <= V; i++){
+        grafo->lista_adj[i] = NULL;
     }
     return grafo;
 }
 
-void adicionaAresta(Graph *grafo, int u, int v) {
-    No *novoNo = criaNovoNo(v);
-    novoNo->proximo = grafo->adjList[u];
-    grafo->adjList[u] = novoNo;
+void adiciona_aresta(grafo *grafo, int u, int v){
+    no *novo_no = criar_no(v);
+    novo_no->proximo = grafo->lista_adj[u];
+    grafo->lista_adj[u] = novo_no;
 }
 
-int temCicloDFS(Graph *grafo, int u, int *estado) {
+int ciclo(grafo *grafo, int u, int *estado){
     estado[u] = 1; 
 
-    No *temp = grafo->adjList[u];
+    no *temp = grafo->lista_adj[u];
     while (temp != NULL) {
         int v = temp->vizinho;
-        if (estado[v] == 1) {
+        if (estado[v] == 1){
             return 1;
         }
-        if (estado[v] == 0) {
-            if (temCicloDFS(grafo, v, estado)) {
+        if (estado[v] == 0){
+            if (ciclo(grafo, v, estado)){
                 return 1; 
             }
         }
@@ -59,13 +65,15 @@ int temCicloDFS(Graph *grafo, int u, int *estado) {
     return 0; 
 }
 
-int detectaCiclo(Graph *grafo) {
-    int *estado = (int *)calloc(grafo->numVertices + 1, sizeof(int));
-    if (estado == NULL) exit(1);
+int detecta_ciclo(grafo *grafo) {
+    int *estado = (int *)calloc(grafo->numero_vertices + 1, sizeof(int));
+    if (estado == NULL){ 
+        exit(1);
+    }
 
-    for (int i = 1; i <= grafo->numVertices; i++) {
-        if (estado[i] == 0) { 
-            if (temCicloDFS(grafo, i, estado)) {
+    for (int i = 1; i <= grafo->numero_vertices; i++){
+        if (estado[i] == 0){ 
+            if (ciclo(grafo, i, estado)){
                 free(estado);
                 return 1; 
             }
@@ -75,39 +83,46 @@ int detectaCiclo(Graph *grafo) {
     return 0; 
 }
 
-void liberaGrafo(Graph *grafo) {
-    for (int i = 1; i <= grafo->numVertices; i++) {
-        No *p = grafo->adjList[i];
-        No *proximo;
-        while (p != NULL) {
+void libera_grafo(grafo *grafo){
+    for (int i = 1; i <= grafo->numero_vertices; i++){
+        no *p = grafo->lista_adj[i];
+        no *proximo;
+        while (p != NULL){
             proximo = p->proximo;
             free(p);
             p = proximo;
         }
     }
-    free(grafo->adjList);
+    free(grafo->lista_adj);
     free(grafo);
 }
 
-int main() {
+int main(){
     int T, N, M, U, V;
 
-    if (scanf("%d", &T) != 1) return 0;
+    if (scanf("%d", &T) != 1){
+        return 0;
+    }
 
-    while (T--) {
-        if (scanf("%d %d", &N, &M) != 2) break;
-        Graph *grafo = criaGrafo(N);
-
-        for (int i = 0; i < M; i++) {
-            if (scanf("%d %d", &U, &V) != 2) break;
-            adicionaAresta(grafo, U, V);
+    while (T--){
+        if (scanf("%d %d", &N, &M) != 2){ 
+            break;
         }
-        if (detectaCiclo(grafo)) {
+        grafo *grafo = criar_grafo(N);
+
+        for (int i = 0; i < M; i++){
+            if (scanf("%d %d", &U, &V) != 2){ 
+                break;
+            }
+            adiciona_aresta(grafo, U, V);
+        }
+        if (ciclo(grafo)){
             printf("IMPOSSIVEL\n");
-        } else {
+        } 
+        else{
             printf("POSSIVEL\n");
         }
-        liberaGrafo(grafo);
+        libera_grafo(grafo);
     }
     return 0;
 }
