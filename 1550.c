@@ -1,50 +1,52 @@
 #include <stdio.h>
-#include <string.h>
 
-#define MAX 10005
+int enfilera[20010];
+int visitado[10005];
+int frente;
+int fim;
 
-int queue[MAX*2];
-int dist[MAX*2];
-int front, rear;
-
-int invert(int x) {
-    int rev = 0;
-    while (x > 0) {
-        rev = rev * 10 + (x % 10);
+int inverter(int x){
+    int reverso = 0;
+    while (x > 0){
+        reverso = reverso * 10 + (x % 10);
         x /= 10;
     }
-    return rev;
+    return reverso;
 }
 
-int bfs(int A, int B) {
-    memset(dist, -1, sizeof(dist));
-    front = rear = 0;
+int bfs(int A, int B){
+    for (int i = 0; i < 10005; i++){
+        visitado[i] = -1;
+    }
+    frente = fim = 0;
 
-    queue[rear++] = A;
-    dist[A] = 0;
+    enfilera[fim++] = A;
+    visitado[A] = 0;
 
-    while (front < rear) {
-        int u = queue[front++];
-        if (u == B) return dist[u];
-
-        if (u + 1 < MAX && dist[u+1] == -1) {
-            dist[u+1] = dist[u] + 1;
-            queue[rear++] = u+1;
+    while (frente < fim){
+        int u = enfilera[frente++];
+        if (u == B){ 
+            return visitado[u];
         }
 
-        int v = invert(u);
-        if (v < MAX && dist[v] == -1) {
-            dist[v] = dist[u] + 1;
-            queue[rear++] = v;
+        if (u + 1 < 10005 && visitado[u+1] == -1){
+            visitado[u+1] = visitado[u] + 1;
+            enfilera[fim++] = u+1;
+        }
+
+        int v = inverter(u);
+        if (v < 10005 && visitado[v] == -1){
+            visitado[v] = visitado[u] + 1;
+            enfilera[fim++] = v;
         }
     }
     return -1; 
 }
 
-int main() {
+int main(){
     int T;
     scanf("%d", &T);
-    while (T--) {
+    while (T--){
         int A, B;
         scanf("%d %d", &A, &B);
         printf("%d\n", bfs(A, B));
