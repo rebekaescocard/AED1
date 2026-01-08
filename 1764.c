@@ -6,19 +6,19 @@ typedef struct {
     int origem;
     int destino;
     int peso;
-}estrada;
+}estrada; 
 
-int cmp_estradas(const void *a, const void *b){
-    estrada *estrada_a = (estrada *)a;
-    estrada *estrada_b = (estrada *)b;
-    return estrada_a->peso - estrada_b->peso;
+int comparar(const void *a, const void *b) {
+    estrada *e1 = (estrada *)a;
+    estrada *e2 = (estrada *)b;
+    return e1->peso - e2->peso;
 }
 
 int pai(int pais[], int i){
     if (pais[i] == i){
         return i;
     }
-    return pai(pais, pais[i]);
+    return pais[i] = pai(pais, pais[i]);
 }
 
 int kruskal(estrada estradas[], int *pais, int total_estradas){
@@ -44,18 +44,18 @@ int main(){
         estrada *grafo = (estrada *)malloc(numero_estradas * sizeof(estrada));
         int *pais = (int *)malloc((numero_cidades + 1) * sizeof(int));
 
-        for (int i = 0; i < num_estradas; ++i){
+        for (int i = 0; i < numero_estradas; ++i){
             scanf("%d %d %d", &grafo[i].origem, &grafo[i].destino, &grafo[i].peso);
         }
 
-        qsort(grafo, num_estradas, sizeof(Estrada), cmp_estradas);
+        qsort(grafo, numero_estradas, sizeof(estrada), comparar);
 
         for (int i = 0; i < numero_cidades; ++i){
             pais[i] = i;
         }
         
         printf("%d\n", kruskal(grafo, pais, numero_estradas));
-
+        
         free(grafo);
         free(pais);
     }
