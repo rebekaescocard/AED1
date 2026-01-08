@@ -1,60 +1,63 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 typedef struct {
-    int u, v;
-    int w;
-} Edge;
+    int origem;
+    int destino;
+    int peso;
+}estrada;
 
-int parent[100000], rankUF[100000];
-
-int find(int x) {
-    if (parent[x] != x)
-        parent[x] = find(parent[x]);
-    return parent[x];
+int cmp_estradas(const void *a, const void *b){
+    estrada *estrada_a = (estrada *)a;
+    estrada *estrada_b = (estrada *)b;
+    return estrada_a->peso - estrada_b->peso;
 }
 
-void unite(int x, int y) {
-    int rx = find(x), ry = find(y);
-    if (rx == ry) return;
-    if (rankUF[rx] < rankUF[ry]) parent[rx] = ry;
-    else if (rankUF[rx] > rankUF[ry]) parent[ry] = rx;
-    else {
-        parent[ry] = rx;
-        rankUF[rx]++;
+int pai(int pais[], int i){
+    if (pais[i] == i){
+        return i;
     }
+    return pai(pais, pais[i]);
 }
 
-int cmp(const void *a, const void *b) {
-    return ((Edge*)a)->w - ((Edge*)b)->w;
+int kruskal(estrada estradas[], int *pais, int total_estradas){
+    int i, soma_pesos = 0;
+    int raiz_u, raiz_v;
+
+    for (i = 0; i < total_estradas; ++i){
+        raiz_v = pai(pais, estradas[i].origem);
+        raiz_u = pai(pais, estradas[i].destino);
+
+        if (raiz_v != raiz_u){
+            pais[raiz_v] = raiz_u; 
+            soma_pesos += estradas[i].peso;
+        }
+    }
+    return soma_pesos;
 }
 
-int main() {
-    int n, m;
-    while (scanf("%d %d", &n, &m) == 2) {
-        if (n == 0 && m == 0) break;
+int main(){
+    int numero_cidades, numero_estradas;
+    while (scanf("%d %d", &numero_cidades, &numero_estradas), numero_cidades && numero_estradas) {
+        
+        estrada *grafo = (estrada *)malloc(numero_estradas * sizeof(estrada));
+        int *pais = (int *)malloc((numero_cidades + 1) * sizeof(int));
 
-        Edge edges[m];
-        for (int i = 0; i < m; i++) {
-            scanf("%d %d %d", &edges[i].u, &edges[i].v, &edges[i].w);
+        for (int i = 0; i < num_estradas; ++i){
+            scanf("%d %d %d", &grafo[i].origem, &grafo[i].destino, &grafo[i].peso);
         }
 
-        for (int i = 0; i < n; i++) {
-            parent[i] = i;
-            rankUF[i] = 0;
+        qsort(grafo, num_estradas, sizeof(Estrada), cmp_estradas);
+
+        for (int i = 0; i < numero_cidades; ++i){
+            pais[i] = i;
         }
+        
+        printf("%d\n", kruskal(grafo, pais, numero_estradas));
 
-        qsort(edges, m, sizeof(Edge), cmp);
-
-        long long total = 0;
-        for (int i = 0; i < m; i++) {
-            if (find(edges[i].u) != find(edges[i].v)) {
-                unite(edges[i].u, edges[i].v);
-                total += edges[i].w;
-            }
-        }
-
-        printf("%lld\n", total);
+        free(grafo);
+        free(pais);
     }
     return 0;
 }
