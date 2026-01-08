@@ -1,60 +1,58 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define MAX 1000
-
-typedef struct No {
+typedef struct no{
     int v;
-    struct No* prox;
-} No;
+    struct no* prox;
+}no;
 
-No* adj[MAX];
-int visitado[MAX];
-int count;
+no* mat[1000];
+int visitado[1000];
+int contador;
 
-void addaresta(int u, int v) {
-    No* no = (No*) malloc(sizeof(No));
+void addiciona_aresta(int u, int v){
+    no* no = (no*) malloc(sizeof(no));
     no->v = v;
-    no->prox = adj[u];
-    adj[u] = no;
+    no->prox = mat[u];
+    mat[u] = no;
 }
 
-void dfs(int u) {
+void dfs(int u){
     visitado[u] = 1;
-    No* p = adj[u];
-    while (p != NULL) {
+    no* p = mat[u];
+    while (p != NULL){
         int v = p->v;
-        if (!visitado[v]) {
-            count++;        
+        if (!visitado[v]){
+            contador++;        
             dfs(v);
         }
         p = p->prox;
     }
 }
 
-int main() {
+int main(){
     int T;
     scanf("%d", &T);
-    while (T--) {
-        int start, n, m;
-        scanf("%d %d %d", &start, &n, &m);
+    while (T--){
+        int inicio, n, m;
+        scanf("%d %d %d", &inicio, &n, &m);
 
-        for (int i = 0; i < n; i++) {
-            adj[i] = NULL;
+        for (int i = 0; i < n; i++){
+            mat[i] = NULL;
             visitado[i] = 0;
         }
-        count = 0;
+        contador = 0;
 
-        for (int i = 0; i < m; i++) {
+        for (int i = 0; i < m; i++){
             int u, v;
             scanf("%d %d", &u, &v);
-            addaresta(u, v);
-            addaresta(v, u); 
+            adiciona_aresta(u, v);
+            adiciona_aresta(v, u); 
         }
 
-        dfs(start);
+        dfs(inicio);
 
-        printf("%d\n", count * 2); 
+        printf("%d\n", contador * 2); 
     }
     return 0;
 }
