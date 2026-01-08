@@ -1,131 +1,92 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct No {
-    int data;
-    struct No *esq;
-    struct No *dir;
-} No;
+typedef struct no{
+    int dados;
+    struct no *esq;
+    struct no *dir;
+}no;
 
-No *criaNovoNo(int data) {
-    No *novoNo = (No *)malloc(sizeof(No));
-    if (novoNo == NULL) exit(1);
-    novoNo->data = data;
-    novoNo->esq = NULL;
-    novoNo->dir = NULL;
-    return novoNo;
+no* criar_no(int valor){
+    no* novo_no = (no*)malloc(sizeof(no));
+    novo_no->dados = valor;
+    novo_no->esq = valor->dir = NULL;
+    return novo_no;
 }
 
-No *inserir(No *root, int data) {
-    if (root == NULL) {
-        return criaNovoNo(data);
+no* inserir(no* raiz, int valor){
+    if (raiz == NULL){ 
+        return criar_no(valor);
     }
-    
-    if (data < root->data) {
-        root->esq = inserir(root->esq, data);
-    } else if (data > root->data) {
-        root->dir = inserir(root->dir, data);
+    if (valor < raiz->dados){
+        raiz->esq = inserir(raiz->esq, valor);
     }
-    return root;
+    else{
+        raiz->dir = inserir(raiz->dir, valor);
+    }
+    return raiz;
 }
 
-void _prefixa(No *root, int *eh_prim) {
-    if (root != NULL) {
-        if (*eh_prim == 0) {
-            printf(" ");
-        } else {
-            *eh_prim = 0; 
+void prefixa(no* raiz){
+    if (raiz != NULL){
+        printf(" %d", raiz->dados);
+        prefixa(raiz->esq);
+        prefixa(raiz->dir);
+    }
+}
+
+void infixa(no* raiz){
+    if (raiz != NULL){
+        infixa(raiz->esq);
+        printf(" %d", raiz->dados);
+        infixa(raiz->dir);
+    }
+}
+
+void posfixa(no* root){
+    if (raiz != NULL){
+        posfixa(raiz->esq);
+        posfixa(raiz->dir);
+        printf(" %d", raiz->dados);
+    }
+}
+
+void libera_arvore(no* raiz){
+    if (raiz != NULL){
+        libera_arvore(raiz->esq);
+        libera_arvore(raiz->dir);
+        free(raiz);
+    }
+}
+
+int main(){
+    int c, n, valor;
+    if (scanf("%d", &c) == EOF){ 
+        return 0;
+    }
+
+    for (int i = 1; i <= c; i++){
+        no* raiz = NULL;
+        scanf("%d", &n);
+        for (int j = 0; j < n; j++){
+            scanf("%d", &valor);
+            raiz = inserir(raiz, valor);
         }
+
+        printf("caso %d:", i);
         
-        printf("%d", root->data);
+        printf("\npre.:");
+        prefixa(raiz);
         
-        _prefixa(root->esq, eh_prim);
-        _prefixa(root->dir, eh_prim);
-    }
-}
-
-void _infixa(No *root, int *eh_prim) {
-    if (root != NULL) {
-        _infixa(root->esq, eh_prim);
-        if (*eh_prim == 0) {
-            printf(" ");
-        } else {
-            *eh_prim = 0; 
-        }
+        printf("\nin..:");
+        infixa(raiz);
         
-        printf("%d", root->data);
+        printf("\npos:");
+        posfixa(raiz);
         
-        _infixa(root->dir, eh_prim);
-    }
-}
-
-void _posfixa(No *root, int *eh_prim) {
-    if (root != NULL) {
-        _posfixa(root->esq, eh_prim);
-        _posfixa(root->dir, eh_prim);
+        printf("\n\n");
         
-        if (*eh_prim == 0) {
-            printf(" ");
-        } else {
-            *eh_prim = 0; 
-        }
-        
-        printf("%d", root->data);
+        libera_arvore(raiz);
     }
-}
-
-void deletaArvore(No *root) {
-    if (root != NULL) {
-        deletaArvore(root->esq);
-        deletaArvore(root->dir);
-        free(root);
-    }
-}
-
-void resolve_caso_teste(int caso_num) {
-    int N;
-    if (scanf("%d", &N) != 1) return;
-
-    No *root = NULL;
-    int valor;
-
-    for (int i = 0; i < N; i++) {
-        if (scanf("%d", &valor) != 1) break;
-        root = inserir(root, valor);
-    }
-
-    printf("Case %d:\n", caso_num);
-    
-    int eh_prim; 
-
-    printf("Pre.:");
-    eh_prim = 1; 
-    _prefixa(root, &eh_prim);
-    printf("\n");
-
-    printf("In..:");
-    eh_prim = 1;
-    _infixa(root, &eh_prim);
-    printf("\n");
-
-    printf("Post.:");
-    eh_prim = 1;
-    _posfixa(root, &eh_prim);
-    printf("\n");
-    
-    deletaArvore(root);
-}
-
-int main() {
-    int C;
-    if (scanf("%d", &C) != 1) return 0;
-
-    for (int i = 1; i <= C; i++) {
-        resolve_caso_teste(i);
-        if (i < C) {
-            printf("\n");
-        }
-    }
-    
     return 0;
 }
