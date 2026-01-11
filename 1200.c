@@ -2,20 +2,20 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef struct no{
+typedef struct No{
     char dados;
     struct No *esq;
-    struct no *dir;
-}no;
+    struct No *dir;
+}No;
 
-no* novo_no(char dados){
-    no* no = (no*) malloc(sizeof(no));
+No* novo_no(char dados){
+    No* no = (No*) malloc(sizeof(No));
     no->dados = dados;
     no->esq = no->dir = NULL;
     return no;
 }
 
-no* inserir(no* raiz, char dados){
+No* inserir(No* raiz, char dados){
     if (raiz == NULL){ 
         return novo_no(dados);
     }
@@ -28,7 +28,7 @@ no* inserir(no* raiz, char dados){
     return raiz;
 }
 
-int busca(no* raiz, char dados){
+int busca(No* raiz, char dados){
     if (raiz == NULL){ 
         return 0;
     }
@@ -43,7 +43,7 @@ int busca(no* raiz, char dados){
     }
 }
 
-void infixa(no* raiz, int *primeiro){
+void infixa(No* raiz, int *primeiro){
     if (raiz != NULL){
         infixa(raiz->esq, primeiro);
         if (!*primeiro){ 
@@ -55,7 +55,7 @@ void infixa(no* raiz, int *primeiro){
     }
 }
 
-void prefixa(no* raiz, int *primeiro){
+void prefixa(No* raiz, int *primeiro){
     if (raiz != NULL){
         if (!*primeiro){ 
             printf(" ");
@@ -67,7 +67,7 @@ void prefixa(no* raiz, int *primeiro){
     }
 }
 
-void posfixa(no* raiz, int *primeiro){
+void posfixa(No* raiz, int *primeiro){
     if (raiz != NULL){
         posfixa(raiz->esq, primeiro);
         posfixa(raiz->dir, primeiro);
@@ -80,7 +80,7 @@ void posfixa(no* raiz, int *primeiro){
 }
 
 int main(){
-    no* raiz = NULL;
+    No* raiz = NULL;
     char ordem[20], c;
 
     while (scanf("%s", ordem) != EOF){
