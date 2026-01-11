@@ -12,7 +12,7 @@ int compara(const void *a, const void *b){
 
 void dfs(int u, int v){
     visitado[u] = 1;
-    componente[cont_compoente++] = u + 'a';
+    componente[cont_componente++] = u + 'a';
 
     for (int i = 0; i < v; i++){
         if (mat[u][i] && !visitado[i]){
