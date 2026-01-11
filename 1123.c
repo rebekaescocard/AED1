@@ -23,6 +23,8 @@ void adiciona_vertice(int u, int v, int w){
     mat[v] = e;
 }
 
+#define INF INT_MAX
+
 int dijkstra(){
     int distancia[250];
     bool visitado[250] = {0};
@@ -30,20 +32,25 @@ int dijkstra(){
     for (int i = 0; i < N; i++){
         distancia[i] = INF;
     }
+
     distancia[K] = 0;
 
     while (1){
-    int u = -1;
-    if (u == -1){ 
-        break; 
-    }
-        if (u == -1){ 
-            break;
+        int u = -1;
+        for (int i = 0; i < N; i++){
+            if (!visitado[i] && (u == -1 || distancia[i] < distancia[u])){
+                u = i;
+            }
         }
+
+        if (u == -1){ 
+            break; 
+        }
+    
         visitado[u] = true;
 
         if (u >= 0 && u < C-1){
-            int v = u+1;
+            int v = u + 1;
             for (vertice* e = mat[u]; e != NULL; e = e->proximo){
                 if (e->v == v){
                     if (distancia[v] > distancia[u] + e->w){
