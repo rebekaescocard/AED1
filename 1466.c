@@ -1,20 +1,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct no{
+typedef struct No{
     int dados;
-    struct no *esq;
-    struct no *dir;
-}no;
+    struct No *esq;
+    struct No *dir;
+}No;
 
-no* novo_no(int dados){
-    no* no = (no*)malloc(sizeof(no));
+No* novo_no(int dados){
+    No* no = (No*)malloc(sizeof(No));
     no->dados = dados;
     no->esq = no->dir = NULL;
     return no;
 }
 
-no* inserir(no* raiz, int dados){
+No* inserir(No* raiz, int dados){
     if (raiz == NULL){ 
         return novo_no(dados);
     }
@@ -27,18 +27,18 @@ no* inserir(no* raiz, int dados){
     return raiz;
 }
 
-void ordem_nivel(no* raiz){
+void ordem_nivel(No* raiz){
     if (!raiz){ 
         return;
     }
-    no* enfilera[10000];
+    No* enfilera[10000];
     int frente = 0; 
     int fim = 0;
     enfilera[fim++] = raiz;
 
     int primeiro = 1;
     while (frente < fim){
-        no* atual = enfilera[frente++];
+        No* atual = enfilera[frente++];
         if (primeiro){
             printf("%d", atual->dados);
             primeiro = 0;
@@ -57,7 +57,7 @@ void ordem_nivel(no* raiz){
 }
 
 
-void libera_arvore(no* raiz){
+void libera_arvore(No* raiz){
     if (!raiz){ 
         return;
     }
@@ -71,7 +71,7 @@ int main(){
     scanf("%d", &t); 
     for (int c = 1; c <= t; c++){
         scanf("%d", &n); 
-        no* raiz = NULL;
+        No* raiz = NULL;
         for (int i = 0; i < n; i++){
             scanf("%d", &dados);
             raiz = inserir(raiz, dados);
