@@ -6,10 +6,10 @@ typedef struct no{
     struct no *proximo;
 }no;
 
-typedef struct grafo{
+typedef struct Grafo{
     int numero_vertices;
     no **lista_adj;
-}grafo;
+}Grafo;
 
 no *criar_no(int v){
     no *novo_no = (no *)malloc(sizeof(no));
@@ -21,15 +21,15 @@ no *criar_no(int v){
     return novo_no;
 }
 
-grafo *criar_grafo(int V){
-    grafo *grafo = (grafo *)malloc(sizeof(grafo));
+Grafo *criar_grafo(int V){
+    Grafo *grafo = (Grafo *)malloc(sizeof(Grafo));
     if (grafo == NULL){ 
         exit(1);
     }
     grafo->numero_vertices = V;
 
     grafo->lista_adj = (no **)malloc((V + 1) * sizeof(no *)); 
-    if (grafo->adjList == NULL){
+    if (grafo->lista_adj == NULL){
         exit(1);
     }
 
@@ -39,13 +39,13 @@ grafo *criar_grafo(int V){
     return grafo;
 }
 
-void adiciona_aresta(grafo *grafo, int u, int v){
+void adiciona_aresta(Grafo *grafo, int u, int v){
     no *novo_no = criar_no(v);
     novo_no->proximo = grafo->lista_adj[u];
     grafo->lista_adj[u] = novo_no;
 }
 
-int ciclo(grafo *grafo, int u, int *estado){
+int ciclo(Grafo *grafo, int u, int *estado){
     estado[u] = 1; 
 
     no *temp = grafo->lista_adj[u];
@@ -65,7 +65,7 @@ int ciclo(grafo *grafo, int u, int *estado){
     return 0; 
 }
 
-int detecta_ciclo(grafo *grafo) {
+int detecta_ciclo(Grafo *grafo) {
     int *estado = (int *)calloc(grafo->numero_vertices + 1, sizeof(int));
     if (estado == NULL){ 
         exit(1);
@@ -83,7 +83,7 @@ int detecta_ciclo(grafo *grafo) {
     return 0; 
 }
 
-void libera_grafo(grafo *grafo){
+void libera_grafo(Grafo *grafo){
     for (int i = 1; i <= grafo->numero_vertices; i++){
         no *p = grafo->lista_adj[i];
         no *proximo;
@@ -108,7 +108,7 @@ int main(){
         if (scanf("%d %d", &N, &M) != 2){ 
             break;
         }
-        grafo *grafo = criar_grafo(N);
+        Grafo *grafo = criar_grafo(N);
 
         for (int i = 0; i < M; i++){
             if (scanf("%d %d", &U, &V) != 2){ 
@@ -116,7 +116,7 @@ int main(){
             }
             adiciona_aresta(grafo, U, V);
         }
-        if (ciclo(grafo)){
+        if (detecta_ciclo(grafo)){
             printf("IMPOSSIVEL\n");
         } 
         else{
