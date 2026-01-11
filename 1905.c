@@ -1,12 +1,9 @@
 #include <stdio.h>
 
-int mat[N][N];
-int visitado[N][N];
-
 int dx[4] = {1, -1, 0, 0};
 int dy[4] = {0, 0, 1, -1};
 
-int dfs(int x, int y) {
+int dfs(int x, int y, int N, int mat[N][N], int visitado[N][N]) {
     if (x < 0 || x >= N || y < 0 || y >= N){ 
         return 0;
     }
@@ -21,7 +18,7 @@ int dfs(int x, int y) {
     }
 
     for (int i = 0; i < 4; i++){
-        if (dfs(x + dx[i], y + dy[i])){ 
+        if (dfs(x + dx[i], y + dy[i], N, mat, visitado)){ 
             return 1;
         }
     }
@@ -29,10 +26,13 @@ int dfs(int x, int y) {
 }
 
 int main(){
-    int T;
+    int T, N;
     scanf("%d", &T);
 
     while (T--){
+        scanf("%d", &N);
+        int mat[N][N];
+        int visitado[N][N];
         for (int i = 0; i < N; i++){
             for (int j = 0; j < N; j++){
                 scanf("%d", &mat[i][j]);
@@ -40,7 +40,7 @@ int main(){
             }
         }
 
-        if (dfs(0, 0)){
+        if (dfs(0, 0, N, mat, visitado)){
             printf("COPS\n");
         }
         else{
