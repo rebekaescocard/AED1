@@ -1,17 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct no{
+typedef struct No{
     int v;
-    struct no* prox;
-}no;
+    struct No* prox;
+}No;
 
-no* mat[1000];
+No* mat[1000];
 int visitado[1000];
 int contador;
 
-void addiciona_aresta(int u, int v){
-    no* no = (no*) malloc(sizeof(no));
+void adiciona_aresta(int u, int v){
+    No* no = (No*) malloc(sizeof(No));
     no->v = v;
     no->prox = mat[u];
     mat[u] = no;
@@ -19,7 +19,7 @@ void addiciona_aresta(int u, int v){
 
 void dfs(int u){
     visitado[u] = 1;
-    no* p = mat[u];
+    No* p = mat[u];
     while (p != NULL){
         int v = p->v;
         if (!visitado[v]){
