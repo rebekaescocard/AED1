@@ -9,8 +9,12 @@ typedef struct no{
 
 no* criar_no(int valor){
     no* novo_no = (no*)malloc(sizeof(no));
+    if (novo_no == NULL){
+        exit(1);
+    }
     novo_no->dados = valor;
-    novo_no->esq = valor->dir = NULL;
+    novo_no->esq = NULL;
+    novo_no->dir = NULL;
     return novo_no;
 }
 
@@ -43,7 +47,7 @@ void infixa(no* raiz){
     }
 }
 
-void posfixa(no* root){
+void posfixa(no* raiz){
     if (raiz != NULL){
         posfixa(raiz->esq);
         posfixa(raiz->dir);
@@ -75,10 +79,10 @@ int main(){
 
         printf("caso %d:", i);
         
-        printf("\npre.:");
+        printf("\npre:");
         prefixa(raiz);
         
-        printf("\nin..:");
+        printf("\nin:");
         infixa(raiz);
         
         printf("\npos:");
